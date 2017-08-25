@@ -4,8 +4,8 @@
     using System.Collections.Generic;
     using System.Data.SQLite;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
-    using System.Text.RegularExpressions;
     using System.Threading;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
@@ -24,11 +24,13 @@
         private readonly Dictionary<int, Process> _processes = new Dictionary<int, Process>();
 
         public ServerInterfaceImpl(string connectstring, string pluginConfigPath) {
-            PluginConfigPath = pluginConfigPath;
+            PluginConfig = new PluginConfig(pluginConfigPath);
+            PluginConfigDirectory = Path.GetDirectoryName(pluginConfigPath);
             _dbConnection = new SQLiteConnection(connectstring);
         }
 
-        public override string PluginConfigPath { get; }
+        public override PluginConfig PluginConfig { get; }
+        public override string PluginConfigDirectory { get; }
 
         public static void Main(string[] args) {
             if (args.Length < 3)
